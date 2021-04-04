@@ -33,7 +33,6 @@ namespace FullscreenLock
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FullscreenLock));
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // button1
@@ -59,18 +58,6 @@ namespace FullscreenLock
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
-            // label4
-            // 
-            this.label4.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.label4.Location = new System.Drawing.Point(-1, 88);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(230, 25);
-            this.label4.TabIndex = 2;
-            this.label4.Text = "✨ Made by Blåberry ✨";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.label4.Click += new System.EventHandler(this.label4_Click);
-            // 
             // FullscreenLock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
@@ -79,7 +66,6 @@ namespace FullscreenLock
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(229, 141);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -100,7 +86,6 @@ namespace FullscreenLock
 
         private System.Windows.Forms.Button button1;
         public System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label4;
     }
 }
 

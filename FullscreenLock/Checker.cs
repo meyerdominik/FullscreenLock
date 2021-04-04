@@ -52,7 +52,7 @@ namespace FullscreenLock
         private void CheckForFullscreenApps(object sender, System.EventArgs e)
         {
         
-            if (IsForegroundFullScreen())
+            if (IsForegroundFullScreenAndNotChrome())
             {
                 
                 l.Text = "Fullscreen app in focus";
@@ -64,7 +64,7 @@ namespace FullscreenLock
             }
         }
 
-        public static bool IsForegroundFullScreen()
+        public static bool IsForegroundFullScreenAndNotChrome()
         {
             //Get the handles for the desktop and shell now.
             IntPtr desktopHandle; 
@@ -87,7 +87,7 @@ namespace FullscreenLock
                     uint procid = 0;
                     GetWindowThreadProcessId(hWnd, out procid);
                     var proc = Process.GetProcessById((int)procid);
-                    if ((appBounds.Bottom - appBounds.Top) == screenBounds.Height && (appBounds.Right - appBounds.Left) == screenBounds.Width)
+                    if ((appBounds.Bottom - appBounds.Top) == screenBounds.Height && (appBounds.Right - appBounds.Left) == screenBounds.Width && proc.ProcessName != "chrome")
                     {
                         Console.WriteLine(proc.ProcessName);
                         Cursor.Clip = screenBounds;
