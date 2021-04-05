@@ -66,40 +66,43 @@ namespace FullscreenLock
 
         public static bool IsForegroundFullScreenAndNotChrome()
         {
-            //Get the handles for the desktop and shell now.
-            IntPtr desktopHandle; 
-            IntPtr shellHandle; 
-            desktopHandle = GetDesktopWindow();
-            shellHandle = GetShellWindow();
-            RECT appBounds;
-            Rectangle screenBounds;
-            IntPtr hWnd;
-
-            hWnd = GetForegroundWindow();
-            if (hWnd != null && !hWnd.Equals(IntPtr.Zero))
+            try
             {
-                //Check we haven't picked up the desktop or the shell
-                if (!(hWnd.Equals(desktopHandle) || hWnd.Equals(shellHandle)))
+                //Get the handles for the desktop and shell now.
+                IntPtr desktopHandle;
+                IntPtr shellHandle;
+                desktopHandle = GetDesktopWindow();
+                shellHandle = GetShellWindow();
+                RECT appBounds;
+                Rectangle screenBounds;
+                IntPtr hWnd;
+
+                hWnd = GetForegroundWindow();
+                if (hWnd != null && !hWnd.Equals(IntPtr.Zero))
                 {
-                    GetWindowRect(hWnd, out appBounds);
-                    //determine if window is fullscreen
-                    screenBounds = Screen.FromHandle(hWnd).Bounds;
-                    uint procid = 0;
-                    GetWindowThreadProcessId(hWnd, out procid);
-                    var proc = Process.GetProcessById((int)procid);
-                    if ((appBounds.Bottom - appBounds.Top) == screenBounds.Height && (appBounds.Right - appBounds.Left) == screenBounds.Width && proc.ProcessName != "chrome")
+                    //Check we haven't picked up the desktop or the shell
+                    if (!(hWnd.Equals(desktopHandle) || hWnd.Equals(shellHandle)))
                     {
-                        Console.WriteLine(proc.ProcessName);
-                        Cursor.Clip = screenBounds;
-                        return true;
+                        GetWindowRect(hWnd, out appBounds);
+                        //determine if window is fullscreen
+                        screenBounds = Screen.FromHandle(hWnd).Bounds;
+                        uint procid = 0;
+                        GetWindowThreadProcessId(hWnd, out procid);
+                        var proc = Process.GetProcessById((int)procid);
+                        if ((appBounds.Bottom - appBounds.Top) == screenBounds.Height && (appBounds.Right - appBounds.Left) == screenBounds.Width && proc.ProcessName != "chrome")
+                        {
+                            Console.WriteLine(proc.ProcessName);
+                            Cursor.Clip = screenBounds;
+                            return true;
+                        }
+                        else
+                        {
+                            Cursor.Clip = Rectangle.Empty;
+                            return false;
+                        }
                     }
-                    else
-                    {
-                        Cursor.Clip = Rectangle.Empty;
-                        return false;
-                    }
-                }   
-             }
+                }
+            } catch (Exception) { }
              return false;
          }
     }
