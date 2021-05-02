@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using System.Windows;
 using System.Drawing;
 using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FullscreenLock
 {
@@ -26,9 +28,12 @@ namespace FullscreenLock
         [DllImport("user32.dll")]
         private static extern IntPtr GetShellWindow();
 
+        private static string[] whitelist = new[] { "chrome", "RaceControl" };
+
         Label l; // One day I'll figure out how to set the label without sending a pointer into the constructor.
         public Checker(Label ll)
         {
+
             l = ll;
             t.Tick += new EventHandler(CheckForFullscreenApps);
             t.Interval = 100;
@@ -51,11 +56,11 @@ namespace FullscreenLock
         
         private void CheckForFullscreenApps(object sender, System.EventArgs e)
         {
-        
-            if (IsForegroundFullScreenAndNotChrome())
+            string sProcName = "";
+            if (IsForegroundFullScreenAndNotWhitelisted(out sProcName))
             {
                 
-                l.Text = "Fullscreen app in focus";
+                l.Text = sProcName + " in focus";
             }
             else
             {
@@ -64,7 +69,7 @@ namespace FullscreenLock
             }
         }
 
-        public static bool IsForegroundFullScreenAndNotChrome()
+        public static bool IsForegroundFullScreenAndNotWhitelisted(out string sProcName)
         {
             try
             {
@@ -76,7 +81,7 @@ namespace FullscreenLock
                 RECT appBounds;
                 Rectangle screenBounds;
                 IntPtr hWnd;
-
+                sProcName = "";
                 hWnd = GetForegroundWindow();
                 if (hWnd != null && !hWnd.Equals(IntPtr.Zero))
                 {
@@ -89,7 +94,8 @@ namespace FullscreenLock
                         uint procid = 0;
                         GetWindowThreadProcessId(hWnd, out procid);
                         var proc = Process.GetProcessById((int)procid);
-                        if ((appBounds.Bottom - appBounds.Top) == screenBounds.Height && (appBounds.Right - appBounds.Left) == screenBounds.Width && proc.ProcessName != "chrome")
+                        sProcName = proc.ProcessName;
+                        if ((appBounds.Bottom - appBounds.Top) == screenBounds.Height && (appBounds.Right - appBounds.Left) == screenBounds.Width && !whitelist.Contains(proc.ProcessName))
                         {
                             Console.WriteLine(proc.ProcessName);
                             Cursor.Clip = screenBounds;
@@ -103,6 +109,7 @@ namespace FullscreenLock
                     }
                 }
             } catch (Exception) { }
+            sProcName = "";
              return false;
          }
     }
